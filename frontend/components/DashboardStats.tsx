@@ -22,7 +22,7 @@ useEffect(() => {
 
     const fetchStats = () => {
         axios
-            .get("http://127.0.0.1:8000/dashboard")
+            .get(`${process.env.NEXT_PUBLIC_API_URL}/dashboard`)
             .then((res) => setStats(res.data));
     };
 

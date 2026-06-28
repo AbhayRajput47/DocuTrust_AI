@@ -13,7 +13,7 @@ export default function DocumentInfo({ refreshDoc }: { refreshDoc: boolean }) {
         const fetchDocument = () => {
 
             axios
-            .get("http://127.0.0.1:8000/documents")
+            .get(`${process.env.NEXT_PUBLIC_API_URL}/documents`)
             .then((res) => {
 
                 if (res.data.length > 0) {

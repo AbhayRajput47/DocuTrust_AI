@@ -21,7 +21,7 @@ export default function UploadBox() {
 
     try {
       await axios.post(
-        "http://127.0.0.1:8000/upload",
+        `${process.env.NEXT_PUBLIC_API_URL}/upload`,
         formData,
         {
           onUploadProgress: (event) => {
