@@ -12,6 +12,9 @@ router = APIRouter()
 
 UPLOAD_FOLDER = "uploads"
 
+# Create uploads folder if it doesn't exist
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 @router.post("/upload")
 
 async def upload_pdf(file: UploadFile = File(...)):
