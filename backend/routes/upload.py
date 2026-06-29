@@ -1,3 +1,5 @@
+
+
 from fastapi import APIRouter, UploadFile, File
 import os
 
@@ -27,11 +29,12 @@ async def upload_pdf(file: UploadFile = File(...)):
     with open(file_path, "wb") as f:
         f.write(await file.read())
     
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "filename": file.filename,
         "event": "PDF Uploaded",
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     text, pages = extract_text_from_pdf(file_path)
     # chunks = split_text(text)
@@ -44,42 +47,48 @@ async def upload_pdf(file: UploadFile = File(...)):
         print("Page:", chunks[i]["page"])
         print("Text:", chunks[i]["text"][:500])
 
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "filename": file.filename,
         "event": "Chunks Generated",
         "chunks_count": len(chunks),
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
     
-    db.documents.insert_one({
+    result = db.documents.insert_one({
         "filename": file.filename,
         "characters": len(text),
         "chunks": len(chunks),
         "uploaded_at": datetime.now()
     })
+    print("Inserted document:", result.inserted_id)
+    print("Database:", db.name)
+
 
     # embeddings = create_embeddings(chunks)
     embeddings = create_embeddings(
         [chunk["text"] for chunk in chunks]
     )    
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "filename": file.filename,
         "event": "Embeddings Created",
         "embeddings_count": len(embeddings),
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     build_index(
         chunks,
         embeddings
     )
 
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "filename": file.filename,
         "event": "FAISS Index Built",
         "timestamp": datetime.now()
     })
-    
+    print("Inserted log:", result.inserted_id)
+
     return {
     "filename": file.filename,
     "characters": len(text),

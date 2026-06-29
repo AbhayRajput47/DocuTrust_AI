@@ -21,7 +21,7 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [selectedConversation, setSelectedConversation] =
     useState<ChatConversation | null>(null);
-
+console.log("Refresh Key:", refreshKey);
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#050816] text-slate-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),transparent_35%),radial-gradient(circle_at_top_right,_rgba(34,197,94,0.16),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.98),rgba(3,7,18,1))]" />

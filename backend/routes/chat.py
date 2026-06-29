@@ -23,11 +23,12 @@ def chat(request: QuestionRequest):
 
     db.logs.delete_many({})
     # Log 1: Question Received
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "query": request.question,
         "event": "Question Received",
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     model = get_model()
 
@@ -40,12 +41,13 @@ def chat(request: QuestionRequest):
     print("Original:", request.question)
     print("Rewritten:", rewritten_query)
 
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "query": request.question,
         "rewritten_query": rewritten_query,
         "event": "Query Rewritten",
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     # q = request.question.lower()
 
@@ -56,11 +58,12 @@ def chat(request: QuestionRequest):
     if route == "DOCUMENT":
 
         print("DOCUMENT AGENT ACTIVATED")
-        db.logs.insert_one({
+        result = db.logs.insert_one({
         "query": request.question,
         "event": "Document Agent Activated",
         "timestamp": datetime.now()
-    })
+        })
+        print("Inserted log:", result.inserted_id)
 
         # context = "\n\n".join(retriever.stored_chunks[:30])
     #     context = "\n\n".join(
@@ -171,19 +174,21 @@ def chat(request: QuestionRequest):
             document_instruction
         )
         
-        db.chats.insert_one({
+        result = db.chats.insert_one({
             "question": request.question,
             "rewritten_query": rewritten_query,
             "answer": answer,
             "confidence": 100,
             "timestamp": datetime.now()
         })
+        print("Inserted chat:", result.inserted_id)
 
-        db.logs.insert_one({
+        result = db.logs.insert_one({
             "query": request.question,
             "event": "Answer Generated",
             "timestamp": datetime.now()
         })
+        print("Inserted log:", result.inserted_id)
         return {
             "answer": answer,
             "confidence": 100,
@@ -220,13 +225,14 @@ def chat(request: QuestionRequest):
     confidence = confidence
     # confidence=90
 
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "query": request.question,
         "event": "Chunks Retrieved",
         "chunks_count": len(chunks),
         "confidence": confidence,
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     # context = "\n\n".join(chunks)
     context = "\n\n".join(
@@ -236,12 +242,13 @@ def chat(request: QuestionRequest):
     print("CONFIDENCE =", confidence)
     if confidence < 10:
 
-        db.logs.insert_one({
+        result = db.logs.insert_one({
             "query": request.question,
             "event": "Retrieval Validation Failed",
             "confidence": confidence,
             "timestamp": datetime.now()
         })
+        print("Inserted log:", result.inserted_id)
 
         return {
             "answer":
@@ -252,12 +259,13 @@ def chat(request: QuestionRequest):
             "sources": []
         }
     
-    db.logs.insert_one({
+    result = db.logs.insert_one({
         "query": request.question,
         "event": "Retrieval Validation Passed",
         "confidence": confidence,
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     answer = generate_answer(
         context,
@@ -270,29 +278,32 @@ def chat(request: QuestionRequest):
     if answer.strip().upper() == "NOT_FOUND":
 
         print("WEB FALLBACK TRIGGERED")
-        db.logs.insert_one({
+        result = db.logs.insert_one({
             "query": request.question,
             "event": "Web Search Triggered",
             "timestamp": datetime.now()
         })
+        print("Inserted log:", result.inserted_id)
 
         answer = web_fallback(
             request.question
         )
 
-        db.chats.insert_one({
+        result = db.chats.insert_one({
             "question": request.question,
             "rewritten_query": rewritten_query,
             "answer": answer,
             "confidence": 50,
             "timestamp": datetime.now()
         })
+        print("Inserted chat:", result.inserted_id)
 
-        db.logs.insert_one({
+        result = db.logs.insert_one({
             "query": request.question,
             "event": "Web Answer Generated",
             "timestamp": datetime.now()
         })
+        print("Inserted log:", result.inserted_id)
 
         return {
             "answer": answer,
@@ -304,24 +315,29 @@ def chat(request: QuestionRequest):
 
 
     # Save Chat History
-    db.chats.insert_one({
+    result = db.chats.insert_one({
         "question": request.question,
         "rewritten_query": rewritten_query,
         "answer": answer,
         "confidence": confidence,
         "timestamp": datetime.now()
     })
-    db.logs.insert_one({
+    print("Inserted chat:", result.inserted_id)
+
+    result = db.logs.insert_one({
         "query": request.question,
         "event": "Cross Encoder Validation",
         "timestamp": datetime.now()
     })
-    db.logs.insert_one({
+    print("Inserted log:", result.inserted_id)
+    
+    result = db.logs.insert_one({
         "query": request.question,
         "event": "Answer Generated",
         "answer_length": len(answer),
         "timestamp": datetime.now()
     })
+    print("Inserted log:", result.inserted_id)
 
     print("\nTOP 3 CHUNKS:")
     for i, c in enumerate(chunks[:3]):

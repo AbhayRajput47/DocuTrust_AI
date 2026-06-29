@@ -55,7 +55,8 @@ export default function ChatBox({ restoredConversation, onRefresh }: ChatBoxProp
       setAnswer(response.data.answer);
       setSources(response.data.sources);
       setConfidence(response.data.confidence);
-
+      
+      console.log("Chat Success");
       onRefresh?.();
     } catch (error) {
       console.log(error);
@@ -64,7 +65,7 @@ export default function ChatBox({ restoredConversation, onRefresh }: ChatBoxProp
       setLoading(false);
     }
   };
-  
+
   return (
     <section className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:p-6">
       <div className="flex flex-col gap-5">

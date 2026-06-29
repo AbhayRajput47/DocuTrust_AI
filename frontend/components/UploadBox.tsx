@@ -39,7 +39,10 @@ export default function UploadBox({ onRefresh }: UploadBoxProps) {
 
       setUploaded(true);
       setProgress(100);
+
+      console.log("Upload Success");
       // Refresh all panels
+
       onRefresh?.();
     } catch (error) {
       console.log(error);
