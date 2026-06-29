@@ -11,6 +11,7 @@ export default function UploadBox() {
   const [progress, setProgress] = useState(0);
 
   const handleUpload = async () => {
+    console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     if (!file) return;
 
     setLoading(true);
