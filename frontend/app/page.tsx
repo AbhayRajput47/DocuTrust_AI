@@ -17,8 +17,8 @@ export type ChatConversation = {
   timestamp?: string;
   sources?: Array<{ id?: number; text?: string } | string>;
 };
-
 export default function Home() {
+  const [refreshKey, setRefreshKey] = useState(0);
   const [selectedConversation, setSelectedConversation] =
     useState<ChatConversation | null>(null);
 
@@ -76,11 +76,12 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <DashboardStats />
+        <DashboardStats refreshKey={refreshKey} />
         
         <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)_300px]">
           <aside className="xl:sticky xl:top-6 xl:h-fit">
             <ChatHistory
+             refreshKey={refreshKey}
               selectedConversation={selectedConversation}
               onSelectConversation={setSelectedConversation}
             />
@@ -89,16 +90,17 @@ export default function Home() {
           <section className="space-y-6">
             <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:p-6">
               <div className="grid gap-6">
-                <UploadBox />
-                <DocumentInfo refreshDoc={false} />
+                <UploadBox onRefresh={() => setRefreshKey(prev => prev + 1)} />
+                <DocumentInfo refreshKey={refreshKey} />
               </div>
             </div>
 
-            <ChatBox restoredConversation={selectedConversation} />
+            <ChatBox restoredConversation={selectedConversation}
+                      onRefresh={() => setRefreshKey(prev => prev + 1)} />
           </section>
 
           <aside className="xl:sticky xl:top-6 xl:h-fit">
-            <AgentActivity />
+            <AgentActivity refreshKey={refreshKey} />
           </aside>
         </div>
       </div>

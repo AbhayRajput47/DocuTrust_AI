@@ -8,8 +8,13 @@ import {
     Database,
     Bot
 } from "lucide-react";
+interface DashboardStatsProps {
+  refreshKey: number;
+}
 
-export default function DashboardStats() {
+export default function DashboardStats({
+  refreshKey,
+}: DashboardStatsProps) {
 
     const [stats, setStats] = useState({
         documents: 0,
@@ -28,11 +33,11 @@ useEffect(() => {
 
     fetchStats();
 
-    const interval = setInterval(fetchStats, 2000);
+    // const interval = setInterval(fetchStats, 2000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
 
-}, []);
+}, [refreshKey]);
 
     const cards = [
         {

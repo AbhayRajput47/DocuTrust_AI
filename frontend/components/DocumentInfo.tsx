@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FileText, Hash, Layers3, BadgeCheck } from "lucide-react";
 
-export default function DocumentInfo({ refreshDoc }: { refreshDoc: boolean }) {
+interface DocumentInfoProps {
+  refreshKey: number;
+}
+
+export default function DocumentInfo({
+  refreshKey,
+}: DocumentInfoProps) {
 
   const [doc, setDoc] = useState<any>(null);
 
@@ -27,14 +33,14 @@ export default function DocumentInfo({ refreshDoc }: { refreshDoc: boolean }) {
 
         fetchDocument();
 
-        const interval = setInterval(
-            fetchDocument,
-            2000
-        );
+        // const interval = setInterval(
+        //     fetchDocument,
+        //     2000
+        // );
 
-        return () => clearInterval(interval);
+        // return () => clearInterval(interval);
 
-        }, [refreshDoc]);
+        }, [refreshKey]);
 
   if (!doc) return null;
 

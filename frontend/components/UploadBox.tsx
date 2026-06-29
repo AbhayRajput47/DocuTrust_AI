@@ -4,7 +4,11 @@ import { useState } from "react";
 import axios from "axios";
 import { FileUp, FileText, CheckCircle2, Loader2, ShieldCheck } from "lucide-react";
 
-export default function UploadBox() {
+interface UploadBoxProps {
+  onRefresh?: () => void;
+}
+
+export default function UploadBox({ onRefresh }: UploadBoxProps) {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
@@ -28,12 +32,15 @@ export default function UploadBox() {
           onUploadProgress: (event) => {
             if (!event.total) return;
             setProgress(Math.round((event.loaded * 100) / event.total));
+
           },
         }
       );
 
       setUploaded(true);
       setProgress(100);
+      // Refresh all panels
+      onRefresh?.();
     } catch (error) {
       console.log(error);
       alert("Upload Failed");

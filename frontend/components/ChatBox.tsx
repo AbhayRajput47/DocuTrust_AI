@@ -15,9 +15,10 @@ type ChatConversation = {
 
 interface ChatBoxProps {
   restoredConversation?: ChatConversation | null;
+  onRefresh?: () => void;
 }
 
-export default function ChatBox({ restoredConversation }: ChatBoxProps) {
+export default function ChatBox({ restoredConversation, onRefresh }: ChatBoxProps) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -54,6 +55,8 @@ export default function ChatBox({ restoredConversation }: ChatBoxProps) {
       setAnswer(response.data.answer);
       setSources(response.data.sources);
       setConfidence(response.data.confidence);
+
+      onRefresh?.();
     } catch (error) {
       console.log(error);
       alert("Failed to get answer");
@@ -61,7 +64,7 @@ export default function ChatBox({ restoredConversation }: ChatBoxProps) {
       setLoading(false);
     }
   };
-
+  
   return (
     <section className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:p-6">
       <div className="flex flex-col gap-5">
@@ -156,3 +159,4 @@ export default function ChatBox({ restoredConversation }: ChatBoxProps) {
     </section>
   );
 }
+

@@ -10,7 +10,13 @@ interface Log {
   timestamp: string;
 }
 
-export default function AgentActivity() {
+interface AgentActivityProps {
+    refreshKey: number;
+}
+
+export default function AgentActivity({
+    refreshKey,
+}: AgentActivityProps) {
 
   const [logs, setLogs] = useState<Log[]>([]);
 
@@ -33,14 +39,14 @@ export default function AgentActivity() {
 
     fetchLogs();
 
-    const interval = setInterval(
-      fetchLogs,
-      3000
-    );
+    // const interval = setInterval(
+    //   fetchLogs,
+    //   3000
+    // );
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
 
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:p-6">

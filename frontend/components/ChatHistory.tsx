@@ -12,11 +12,13 @@ type ChatConversation = {
 };
 
 interface ChatHistoryProps {
+  refreshKey: number;
   selectedConversation: ChatConversation | null;
   onSelectConversation: (conversation: ChatConversation) => void;
 }
 
 export default function ChatHistory({
+  refreshKey,
   selectedConversation,
   onSelectConversation,
 }: ChatHistoryProps) {
@@ -34,14 +36,14 @@ useEffect(() => {
 
   fetchHistory(); // Initial load
 
-  const interval = setInterval(
-    fetchHistory,
-    2000
-  );
+  // const interval = setInterval(
+  //   fetchHistory,
+  //   2000
+  // );
 
-  return () => clearInterval(interval);
+  // return () => clearInterval(interval);
 
-}, []);
+}, [refreshKey]);
 
   const formatTimestamp = (timestamp?: string) => {
     if (!timestamp) return "Recent";
