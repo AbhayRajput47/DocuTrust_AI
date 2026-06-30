@@ -28,10 +28,19 @@ useEffect(() => {
 
   const fetchHistory = () => {
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/history`)
-      .then((res) => res.json())
-      .then((data) => setHistory(data));
+    // fetch(`${process.env.NEXT_PUBLIC_API_URL}/history`)
+    //   .then((res) => res.json())
+    //   .then((data) => setHistory(data));
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/history`)
+        .then((res) => res.json())
+        .then((data) => {
 
+          console.log("History:", data);
+          console.log("Latest timestamp:", data[0]?.timestamp);
+          console.log("Browser time:", new Date().toISOString());
+
+          setHistory(data);
+        });
   };
 
   fetchHistory(); // Initial load
