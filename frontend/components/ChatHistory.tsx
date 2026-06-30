@@ -54,22 +54,45 @@ useEffect(() => {
 
 }, [refreshKey]);
 
-  const formatTimestamp = (timestamp?: string) => {
-    if (!timestamp) return "Recent";
+  // const formatTimestamp = (timestamp?: string) => {
+  //   if (!timestamp) return "Recent";
 
-    const parsed = new Date(timestamp);
-    if (Number.isNaN(parsed.getTime())) return "Recent";
+  //   const parsed = new Date(timestamp);
+  //   if (Number.isNaN(parsed.getTime())) return "Recent";
 
-    const diff = Date.now() - parsed.getTime();
-    const minutes = Math.max(1, Math.floor(diff / 60000));
-    if (minutes < 60) return `${minutes} min ago`;
+  //   const diff = Date.now() - parsed.getTime();
+  //   const minutes = Math.max(1, Math.floor(diff / 60000));
+  //   if (minutes < 60) return `${minutes} min ago`;
 
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} hr ago`;
+  //   const hours = Math.floor(minutes / 60);
+  //   if (hours < 24) return `${hours} hr ago`;
 
-    const days = Math.floor(hours / 24);
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  };
+  //   const days = Math.floor(hours / 24);
+  //   return `${days} day${days > 1 ? "s" : ""} ago`;
+  // };
+const formatTimestamp = (timestamp?: string) => {
+  if (!timestamp) return "Recent";
+
+  const parsed = new Date(timestamp);
+
+  console.log("Raw Timestamp:", timestamp);
+  console.log("Parsed Date:", parsed.toString());
+  console.log("Current Date:", new Date().toString());
+
+  const diff = Date.now() - parsed.getTime();
+  const minutes = Math.floor(diff / 60000);
+
+  console.log("Minutes Difference:", minutes);
+
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hr ago`;
+
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? "s" : ""} ago`;
+};
 
   return (
     <div className="rounded-[28px] border border-white/10 bg-white/5 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.25)] backdrop-blur-xl sm:p-6">
