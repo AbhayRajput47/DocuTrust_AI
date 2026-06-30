@@ -61,8 +61,19 @@ async def upload_pdf(file: UploadFile = File(...)):
         "chunks": len(chunks),
         "uploaded_at": datetime.now()
     })
-    print("Inserted document:", result.inserted_id)
+    #added print statements to log the inserted document and database name
+    print("Inserted document:", file.filename)
+    print("Inserted ID:", result.inserted_id)
     print("Database:", db.name)
+    docs = list(
+        db.documents.find({}, {"_id": 0})
+        .sort("uploaded_at", -1)
+        .limit(3)
+    )
+
+    print("\nTop 3 documents after insert:")
+    for d in docs:
+        print(d["filename"])
 
 
     # embeddings = create_embeddings(chunks)
