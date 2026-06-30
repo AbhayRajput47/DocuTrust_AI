@@ -8,7 +8,7 @@ from rag.chunker import split_text, split_pages
 from rag.embeddings import create_embeddings
 from rag.retriever import build_index
 from database.mongo import db
-from datetime import datetime
+from datetime import datetime,timezone
 
 router = APIRouter()
 
@@ -32,7 +32,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     result = db.logs.insert_one({
         "filename": file.filename,
         "event": "PDF Uploaded",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
@@ -51,7 +51,7 @@ async def upload_pdf(file: UploadFile = File(...)):
         "filename": file.filename,
         "event": "Chunks Generated",
         "chunks_count": len(chunks),
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
     
@@ -59,7 +59,7 @@ async def upload_pdf(file: UploadFile = File(...)):
         "filename": file.filename,
         "characters": len(text),
         "chunks": len(chunks),
-        "uploaded_at": datetime.now()
+        "uploaded_at": datetime.now(timezone.utc)
     })
     #added print statements to log the inserted document and database name
     print("Inserted document:", file.filename)
@@ -84,7 +84,7 @@ async def upload_pdf(file: UploadFile = File(...)):
         "filename": file.filename,
         "event": "Embeddings Created",
         "embeddings_count": len(embeddings),
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
@@ -96,7 +96,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     result = db.logs.insert_one({
         "filename": file.filename,
         "event": "FAISS Index Built",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 

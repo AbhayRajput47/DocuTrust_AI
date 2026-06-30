@@ -5,7 +5,7 @@ from rag.embeddings import get_model
 from rag.retriever import get_relevant_chunks
 from rag.generator import generate_answer
 from database.mongo import db
-from datetime import datetime
+from datetime import datetime,timezone
 from rag.reranker import rerank_chunks
 # from rag.query_rewrite import rewrite_query
 from rag.web_fallback import web_fallback
@@ -26,7 +26,7 @@ def chat(request: QuestionRequest):
     result = db.logs.insert_one({
         "query": request.question,
         "event": "Question Received",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
@@ -45,7 +45,7 @@ def chat(request: QuestionRequest):
         "query": request.question,
         "rewritten_query": rewritten_query,
         "event": "Query Rewritten",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
@@ -61,7 +61,7 @@ def chat(request: QuestionRequest):
         result = db.logs.insert_one({
         "query": request.question,
         "event": "Document Agent Activated",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted log:", result.inserted_id)
 
@@ -179,14 +179,14 @@ def chat(request: QuestionRequest):
             "rewritten_query": rewritten_query,
             "answer": answer,
             "confidence": 100,
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted chat:", result.inserted_id)
 
         result = db.logs.insert_one({
             "query": request.question,
             "event": "Answer Generated",
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted log:", result.inserted_id)
         return {
@@ -230,7 +230,7 @@ def chat(request: QuestionRequest):
         "event": "Chunks Retrieved",
         "chunks_count": len(chunks),
         "confidence": confidence,
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
@@ -246,7 +246,7 @@ def chat(request: QuestionRequest):
             "query": request.question,
             "event": "Retrieval Validation Failed",
             "confidence": confidence,
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted log:", result.inserted_id)
 
@@ -263,7 +263,7 @@ def chat(request: QuestionRequest):
         "query": request.question,
         "event": "Retrieval Validation Passed",
         "confidence": confidence,
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
@@ -281,7 +281,7 @@ def chat(request: QuestionRequest):
         result = db.logs.insert_one({
             "query": request.question,
             "event": "Web Search Triggered",
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted log:", result.inserted_id)
 
@@ -294,14 +294,14 @@ def chat(request: QuestionRequest):
             "rewritten_query": rewritten_query,
             "answer": answer,
             "confidence": 50,
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted chat:", result.inserted_id)
 
         result = db.logs.insert_one({
             "query": request.question,
             "event": "Web Answer Generated",
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         })
         print("Inserted log:", result.inserted_id)
 
@@ -320,14 +320,14 @@ def chat(request: QuestionRequest):
         "rewritten_query": rewritten_query,
         "answer": answer,
         "confidence": confidence,
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted chat:", result.inserted_id)
 
     result = db.logs.insert_one({
         "query": request.question,
         "event": "Cross Encoder Validation",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
     
@@ -335,7 +335,7 @@ def chat(request: QuestionRequest):
         "query": request.question,
         "event": "Answer Generated",
         "answer_length": len(answer),
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print("Inserted log:", result.inserted_id)
 
