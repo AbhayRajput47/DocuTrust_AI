@@ -17,5 +17,11 @@ def get_history():
             -1
         ).limit(10)
     )
-
+    for chat in chats:
+        if "timestamp" in chat:
+            chat["timestamp"] = chat["timestamp"].isoformat()
+            
+    print("\nLatest chat:")
+    if chats:
+        print(chats[0])   
     return chats
