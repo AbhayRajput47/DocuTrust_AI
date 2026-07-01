@@ -19,8 +19,8 @@ def get_history():
     )
     for chat in chats:
         if "timestamp" in chat:
-            chat["timestamp"] = chat["timestamp"].isoformat()
-            
+            chat["timestamp"] = chat["timestamp"].strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
     print("\nLatest chat:")
     if chats:
         print(chats[0])   
